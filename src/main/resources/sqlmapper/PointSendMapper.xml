@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hexun.pointQuartz.mapper.pointSendMapper" >
+  <resultMap id="BaseResultMap" type="com.hexun.pointQuartz.entity.PointSend" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="useid" property="useid" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="pointtype" property="pointtype" jdbcType="VARCHAR" />
+    <result column="sendnote" property="sendnote" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="creattime" property="creattime" jdbcType="TIMESTAMP" />
+    <result column="founder" property="founder" jdbcType="VARCHAR" />
+    <result column="sendtime" property="sendtime" jdbcType="TIMESTAMP" />
+    <result column="sendflag" property="sendflag" jdbcType="VARCHAR" />
+    <result column="errorinfo" property="errorinfo" jdbcType="VARCHAR" />
+    <result column="remark1" property="remark1" jdbcType="VARCHAR" />
+    <result column="remark2" property="remark2" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, useid, amount, pointtype, sendnote, source, creattime, founder, sendtime, sendflag, 
+    errorinfo, remark1, remark2
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from pointsend
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectShareList" resultMap="java.util.Map"  >
+    SELECT
+			 COUNT(1) count,s.USER_ID userid
+				
+				FROM
+					share_db.assist a
+				INNER  JOIN share_db.send_assist s ON s.ID = a.SEND_ASSIST_ID
+
+				INNER JOIN 	match_db.match_user_tab m  ON ASSIST_USER_ID = m.hexun_id
+
+     WHERE DATE_FORMAT(
+					m.mu_account_start_date,
+					'%Y-%m-%d'
+				) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+
+		GROUP BY s.USER_ID 
+  </select>
+  
+  
+    <select id="yesterdayLoginList" resultMap="java.util.Map"  >
+		SELECT
+			hexun_id,
+			mu_account_start_date
+		FROM
+			match_db.match_user_tab
+		WHERE
+			DATE_FORMAT(
+				mu_account_start_date,
+				'%Y-%m-%d'
+			) = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from pointsend
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hexun.pointQuartz.entity.PointSend" >
+    insert into pointsend (id, useid, amount, 
+      pointtype, sendnote, source, 
+      creattime, founder, sendtime, 
+      sendflag, errorinfo, remark1, 
+      remark2)
+    values (#{id,jdbcType=VARCHAR}, #{useid,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, 
+      #{pointtype,jdbcType=VARCHAR}, #{sendnote,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{creattime,jdbcType=TIMESTAMP}, #{founder,jdbcType=VARCHAR}, #{sendtime,jdbcType=TIMESTAMP}, 
+      #{sendflag,jdbcType=VARCHAR}, #{errorinfo,jdbcType=VARCHAR}, #{remark1,jdbcType=VARCHAR}, 
+      #{remark2,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hexun.pointQuartz.entity.PointSend" >
+    insert into pointsend
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="useid != null" >
+        useid,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="pointtype != null" >
+        pointtype,
+      </if>
+      <if test="sendnote != null" >
+        sendnote,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="creattime != null" >
+        creattime,
+      </if>
+      <if test="founder != null" >
+        founder,
+      </if>
+      <if test="sendtime != null" >
+        sendtime,
+      </if>
+      <if test="sendflag != null" >
+        sendflag,
+      </if>
+      <if test="errorinfo != null" >
+        errorinfo,
+      </if>
+      <if test="remark1 != null" >
+        remark1,
+      </if>
+      <if test="remark2 != null" >
+        remark2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="useid != null" >
+        #{useid,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="pointtype != null" >
+        #{pointtype,jdbcType=VARCHAR},
+      </if>
+      <if test="sendnote != null" >
+        #{sendnote,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="creattime != null" >
+        #{creattime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="founder != null" >
+        #{founder,jdbcType=VARCHAR},
+      </if>
+      <if test="sendtime != null" >
+        #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendflag != null" >
+        #{sendflag,jdbcType=VARCHAR},
+      </if>
+      <if test="errorinfo != null" >
+        #{errorinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        #{remark2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hexun.pointQuartz.entity.PointSend" >
+    update pointsend
+    <set >
+      <if test="useid != null" >
+        useid = #{useid,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="pointtype != null" >
+        pointtype = #{pointtype,jdbcType=VARCHAR},
+      </if>
+      <if test="sendnote != null" >
+        sendnote = #{sendnote,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="creattime != null" >
+        creattime = #{creattime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="founder != null" >
+        founder = #{founder,jdbcType=VARCHAR},
+      </if>
+      <if test="sendtime != null" >
+        sendtime = #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendflag != null" >
+        sendflag = #{sendflag,jdbcType=VARCHAR},
+      </if>
+      <if test="errorinfo != null" >
+        errorinfo = #{errorinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        remark1 = #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        remark2 = #{remark2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hexun.pointQuartz.entity.PointSend" >
+    update pointsend
+    set useid = #{useid,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=DECIMAL},
+      pointtype = #{pointtype,jdbcType=VARCHAR},
+      sendnote = #{sendnote,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      creattime = #{creattime,jdbcType=TIMESTAMP},
+      founder = #{founder,jdbcType=VARCHAR},
+      sendtime = #{sendtime,jdbcType=TIMESTAMP},
+      sendflag = #{sendflag,jdbcType=VARCHAR},
+      errorinfo = #{errorinfo,jdbcType=VARCHAR},
+      remark1 = #{remark1,jdbcType=VARCHAR},
+      remark2 = #{remark2,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
